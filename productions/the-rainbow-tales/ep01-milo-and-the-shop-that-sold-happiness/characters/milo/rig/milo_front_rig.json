@@ -1,0 +1,227 @@
+{
+  "character_id": "milo",
+  "view": "front",
+  "source": {
+    "file": "reference/milo_character_sheet_official.webp",
+    "crop": [
+      270,
+      5,
+      282,
+      387
+    ],
+    "scale": 2
+  },
+  "canvas": {
+    "width": 564,
+    "height": 774
+  },
+  "draw_order": [
+    "tail",
+    "body",
+    "head",
+    "mouth",
+    "eyes",
+    "bandana",
+    "ear_left",
+    "ear_right"
+  ],
+  "parenting": {
+    "head": [
+      "mouth",
+      "eyes",
+      "ear_left",
+      "ear_right"
+    ],
+    "body": [
+      "head",
+      "bandana"
+    ]
+  },
+  "pivots": {
+    "body": [
+      282,
+      774
+    ],
+    "head": [
+      290,
+      410
+    ],
+    "ear_left": [
+      136,
+      120
+    ],
+    "ear_right": [
+      420,
+      88
+    ],
+    "bandana": [
+      290,
+      384
+    ],
+    "tail": [
+      108,
+      692
+    ],
+    "mouth": [
+      282,
+      308
+    ]
+  },
+  "eyes": {
+    "left": {
+      "cx": 207.0,
+      "cy": 207.0,
+      "rx": 43.0,
+      "ry": 41.0
+    },
+    "right": {
+      "cx": 356.0,
+      "cy": 188.0,
+      "rx": 40.0,
+      "ry": 42.0
+    }
+  },
+  "eyelid": {
+    "mode": "official_tile_swap",
+    "half_full_at": 0.4,
+    "closed_from": 0.55,
+    "closed_full_at": 0.9
+  },
+  "limits_deg": {
+    "head": [
+      -8,
+      8
+    ],
+    "ear_left": [
+      -7,
+      7
+    ],
+    "ear_right": [
+      -7,
+      7
+    ],
+    "tail": [
+      -14,
+      14
+    ],
+    "bandana": [
+      -1.5,
+      1.5
+    ]
+  },
+  "layers": {
+    "tail": {
+      "file": "layers/tail.png",
+      "bbox": [
+        33,
+        649,
+        110,
+        722
+      ]
+    },
+    "body": {
+      "file": "layers/body.png",
+      "bbox": [
+        77,
+        317,
+        482,
+        756
+      ]
+    },
+    "head": {
+      "file": "layers/head.png",
+      "bbox": [
+        111,
+        27,
+        470,
+        414
+      ]
+    },
+    "mouth": {
+      "file": "layers/mouth.png",
+      "bbox": [
+        204,
+        301,
+        361,
+        391
+      ]
+    },
+    "eye_left_half": {
+      "file": "layers/eye_left_half.png",
+      "bbox": [
+        153,
+        155,
+        261,
+        248
+      ]
+    },
+    "eye_left_closed": {
+      "file": "layers/eye_left_closed.png",
+      "bbox": [
+        153,
+        155,
+        261,
+        248
+      ]
+    },
+    "eye_right_half": {
+      "file": "layers/eye_right_half.png",
+      "bbox": [
+        305,
+        135,
+        407,
+        231
+      ]
+    },
+    "eye_right_closed": {
+      "file": "layers/eye_right_closed.png",
+      "bbox": [
+        305,
+        135,
+        407,
+        231
+      ]
+    },
+    "bandana": {
+      "file": "layers/bandana.png",
+      "bbox": [
+        172,
+        374,
+        399,
+        531
+      ]
+    },
+    "ear_left": {
+      "file": "layers/ear_left.png",
+      "bbox": [
+        9,
+        101,
+        162,
+        426
+      ]
+    },
+    "ear_right": {
+      "file": "layers/ear_right.png",
+      "bbox": [
+        403,
+        69,
+        550,
+        386
+      ]
+    },
+    "_reference_cutout": {
+      "file": "layers/_reference_cutout.png",
+      "bbox": [
+        9,
+        27,
+        550,
+        756
+      ]
+    }
+  },
+  "synthesized_fills": {
+    "head": "16px cheek strip mirrored under each ear (hidden at rest)",
+    "body": "24px jaw-fur band above the head cut line (hidden at rest)",
+    "eye_states": "official Half Blink / Blink (Closed) tiles scaled onto each eye, colour-matched to the surrounding fur; mirrored for Milo's left eye (viewer's right)"
+  }
+}

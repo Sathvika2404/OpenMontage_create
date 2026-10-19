@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "id": "milo_puppet_test_15s",
+  "character_id": "milo",
+  "rig": "characters/milo/rig/milo_front_rig.json",
+  "fps": 30,
+  "duration_seconds": 15,
+  "notes": "Hand-authored explicit action timeline (not the stub action_timeline_compiler). Keys are [seconds, value, ease] where ease shapes the segment arriving at that key: linear | in | out | inOut | outBack. Angles in degrees (positive = clockwise on screen), offsets in rig-canvas px, closure 0=open 1=closed.",
+  "beats": [
+    {"start": 0, "end": 3, "action": "idle", "description": "Idle breathing, natural blink at 1.6s."},
+    {"start": 3, "end": 6, "action": "curious_tilt", "description": "Head tilts ~6 deg with ear follow-through; half-blink at 4.7s."},
+    {"start": 6, "end": 9, "action": "happy_wag", "description": "Tail wag with envelope, subtle jaw movement, small head bob; blink at 7.5s."},
+    {"start": 9, "end": 12, "action": "wink", "description": "Wink with Milo's left eye (viewer's right) plus a slight counter-tilt. Full-head expression swaps deliberately not used (scale/lighting mismatch)."},
+    {"start": 12, "end": 15, "action": "happy_return", "description": "Return to the default happy face with a gentle camera push-in; blink at 13.6s."}
+  ],
+  "channels": {
+    "head.rotate": [[0, 0, "linear"], [1.2, -0.6, "inOut"], [2.6, 0.4, "inOut"], [3.2, 0, "inOut"], [4.1, 6, "inOut"], [5.4, 5.2, "inOut"], [6.3, 0, "inOut"], [9.3, 0, "inOut"], [9.9, -3.5, "inOut"], [11.3, -3, "inOut"], [12.2, 0, "inOut"], [15, 0, "linear"]],
+    "head.x": [[0, 0, "linear"], [3.2, 0, "linear"], [4.1, 6, "inOut"], [5.4, 5, "inOut"], [6.3, 0, "inOut"], [15, 0, "linear"]],
+    "head.y": [[0, 0, "linear"], [3.2, 0, "linear"], [4.1, -3, "inOut"], [6.3, 0, "inOut"], [15, 0, "linear"]],
+    "eye_left.closure": [[0, 0, "linear"], [1.6, 0, "linear"], [1.69, 1, "in"], [1.76, 1, "linear"], [1.9, 0, "out"], [4.7, 0, "linear"], [4.82, 0.45, "inOut"], [5.1, 0.45, "linear"], [5.28, 0, "inOut"], [7.5, 0, "linear"], [7.59, 1, "in"], [7.66, 1, "linear"], [7.8, 0, "out"], [13.6, 0, "linear"], [13.69, 1, "in"], [13.76, 1, "linear"], [13.9, 0, "out"]],
+    "eye_right.closure": [[0, 0, "linear"], [1.6, 0, "linear"], [1.69, 1, "in"], [1.76, 1, "linear"], [1.9, 0, "out"], [4.7, 0, "linear"], [4.82, 0.45, "inOut"], [5.1, 0.45, "linear"], [5.28, 0, "inOut"], [7.5, 0, "linear"], [7.59, 1, "in"], [7.66, 1, "linear"], [7.8, 0, "out"], [9.7, 0, "linear"], [9.92, 1, "inOut"], [10.8, 1, "linear"], [11.05, 0, "inOut"], [13.6, 0, "linear"], [13.69, 1, "in"], [13.76, 1, "linear"], [13.9, 0, "out"]],
+    "mouth.open": [[0, 0, "linear"], [6.2, 0, "linear"], [6.6, 1, "inOut"], [7.1, 0.35, "inOut"], [7.6, 1, "inOut"], [8.2, 0.4, "inOut"], [8.8, 0.8, "inOut"], [9.4, 0, "inOut"], [9.8, 0.5, "inOut"], [10.8, 0.5, "linear"], [11.3, 0, "inOut"], [12.4, 0, "linear"], [12.9, 0.6, "inOut"], [13.6, 0.2, "inOut"], [14.4, 0.5, "inOut"], [15, 0.3, "inOut"]],
+    "bandana.rotate": [[0, 0, "linear"], [15, 0, "linear"]],
+    "camera.scale": [[0, 1, "linear"], [12.0, 1, "linear"], [15, 1.09, "inOut"]],
+    "camera.focus_y": [[0, 0, "linear"], [12.0, 0, "linear"], [15, -40, "inOut"]]
+  },
+  "oscillators": [
+    {"channel": "body.breath", "start": 0, "end": 15, "amplitude": 0.011, "period_seconds": 3.2, "fade_seconds": 0, "shape": "sine_positive"},
+    {"channel": "tail.rotate", "start": 0, "end": 15, "amplitude": 2.5, "period_seconds": 2.4, "fade_seconds": 0, "shape": "sine"},
+    {"channel": "tail.rotate", "start": 6.1, "end": 9.0, "amplitude": 12, "period_seconds": 0.42, "fade_seconds": 0.45, "shape": "sine"},
+    {"channel": "head.y", "start": 6.1, "end": 9.0, "amplitude": 2.5, "period_seconds": 0.84, "fade_seconds": 0.45, "shape": "sine"},
+    {"channel": "bandana.rotate", "start": 6.1, "end": 9.0, "amplitude": 0.6, "period_seconds": 0.84, "fade_seconds": 0.45, "shape": "sine"}
+  ],
+  "follow": [
+    {"channel": "ear_left.rotate", "source": "head.rotate", "gain": -0.55, "stiffness": 90, "damping": 9, "note": "Ears are parented to the head; gravity counter-rotates them and the spring adds a soft overshoot."},
+    {"channel": "ear_right.rotate", "source": "head.rotate", "gain": -0.55, "stiffness": 80, "damping": 8},
+    {"channel": "bandana.rotate", "source": "head.rotate", "gain": 0.12, "stiffness": 60, "damping": 10}
+  ]
+}
