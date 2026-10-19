@@ -54,7 +54,8 @@ ears; `body` breathing lifts head and bandana at their pivot heights.
 | tail | behind back paw | idle sway, wag (±28°) |
 | bandana | knot line | slight lag on head / wag (±2°) |
 | mouth (lower jaw + tongue) | upper lip line | panting, gasp (jaw drop) |
-| eyes | — | blink / half-blink / wink / happy squeeze / wide via the sheet's official **Half Blink**, **Blink (Closed)** and **Wide** tiles, scaled and colour-matched per eye |
+| eyes | — | blink / half-blink / wink / happy squeeze / wide via the sheet's official **Half Blink**, **Blink (Closed)** and **Wide** tiles, scaled and colour-matched per eye; **gaze** toward screen-right (eye interior slides under the rim) |
+| body lean | paw line | upper body shears toward screen-right with paws planted; head and bandana carried |
 
 ### What is synthesized (approved for this test only)
 
@@ -64,8 +65,10 @@ ears; `body` breathing lifts head and bandana at their pivot heights.
 
 ### Evaluated and rejected (needs new artwork)
 
-- **Eye direction (iris glance):** the painted iris blends into the rim shadow,
-  so a cut-out iris leaves fragments and bright edges when moved.
+- **Eye direction by cutting out the iris:** the painted iris blends into the
+  rim shadow, so a cut-out iris leaves fragments. *Solved differently:* the
+  whole eye interior slides under the fixed rim (`eye_*_gaze_NN` layers,
+  screen-right only, up to 4.5 source px). Leftward gaze is not built yet.
 - **Mouth shapes (closed / small open / round):** the sheet's mouth tiles have a
   closed jaw, while the front view's jaw hangs open down to the bandana; the
   missing chin made the swap read as a pasted patch.
@@ -79,7 +82,7 @@ ears; `body` breathing lifts head and bandana at their pivot heights.
 3. A fully visible tail in the front view (only a small tuft shows).
 4. Brows / expression overlays at front-view scale (sad, determined, surprised).
 5. Mouth shapes at front-view scale and angle for lip sync (incl. the chin for a closed jaw).
-6. Separate iris + eye-white layers for eye direction.
+6. Separate iris + eye-white layers for unrestricted eye direction (left, up, down).
 7. A layered 3/4 head (and body) for real head turns.
 8. Separated legs for walk/run; side, 3/4 and back views as parts.
 

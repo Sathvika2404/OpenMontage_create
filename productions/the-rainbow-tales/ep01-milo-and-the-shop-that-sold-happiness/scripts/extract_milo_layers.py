@@ -83,10 +83,15 @@ EYE_TILE_Y_LIMIT = (899, 979)  # stay inside the rounded tile
 EYE_L = (103.5, 103.5, 19.5, 18.5)
 EYE_R = (178.0, 94.0, 18.0, 19.0)
 
-# NOTE: separating the irises for eye direction ("glance") was evaluated and
-# rejected: in the painted art the iris blends softly into the rim shadow, so
-# a hard-edged iris cut leaves fragments and bright edges when shifted. Needs
-# separate iris + eye-white artwork.
+# Eye direction ("gaze"): cutting the iris out was rejected (the painted iris
+# blends into the rim shadow, so a hard iris cut leaves fragments). Instead
+# the whole eye interior (iris, pupil, catch-light, white) slides under the
+# fixed dark rim and the uncovered side is filled with that eye's own sclera
+# colour. Pre-rendered in GAZE_STEPS steps toward screen-right.
+GAZE_MAX_PX = 4.5            # crop px of interior shift at gaze = 1
+GAZE_STEPS = 10
+GAZE_INSET = 3.0             # eye opening = rim ellipse shrunk by this (crop px)
+GAZE_EDGE = 2.5              # moved content fades in this far inside the opening
 # NOTE: the sheet's "Mouth Shapes" tiles were evaluated and rejected for the
 # front view: they show a closed/near-closed jaw, while the front view's jaw
 # hangs open down to the bandana, so swapping them in requires chin artwork
@@ -278,6 +283,37 @@ def fit_eye_tiles(sheet: np.ndarray, face: np.ndarray) -> dict:
     return out
 
 
+def make_gaze_frames(head_big: np.ndarray) -> dict:
+    """Return {(side, step): (bgr, alpha)} eye-interior shifts toward screen-right."""
+    rgb = head_big.astype(np.float32)
+    H, W = rgb.shape[:2]
+    hsv = cv2.cvtColor(head_big, cv2.COLOR_BGR2HSV)
+    ys = np.arange(H, dtype=np.float32)[:, None]
+
+    def ellipse_alpha(cx, cy, rx, ry, dx, sigma):
+        m = np.zeros((H, W), np.uint8)
+        cv2.ellipse(m, (int(round((cx + dx) * SCALE)), int(round(cy * SCALE))),
+                    (int(rx * SCALE), int(ry * SCALE)), 0, 0, 360, 255, -1)
+        return cv2.GaussianBlur(m, (0, 0), sigma * SCALE)[..., None] / 255.0
+
+    out = {}
+    for side, (cx, cy, rx, ry) in (("left", EYE_L), ("right", EYE_R)):
+        open_a = ellipse_alpha(cx, cy, rx - GAZE_INSET, ry - GAZE_INSET, 0, 0.6)
+        sclera_px = (hsv[:, :, 2] > 170) & (hsv[:, :, 1] < 80) & (open_a[..., 0] > 0.5)
+        sclera = rgb[sclera_px].mean(0)
+        shade = np.clip(0.7 + 0.3 * (ys - (cy - ry) * SCALE) / (ry * SCALE * 1.2), 0.7, 1.0)[..., None]
+        fill = sclera[None, None, :] * shade  # darker under the upper lid
+        for step in range(1, GAZE_STEPS + 1):
+            dx = GAZE_MAX_PX * step / GAZE_STEPS
+            M = np.float32([[1, 0, dx * SCALE], [0, 1, 0]])
+            moved = cv2.warpAffine(rgb, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+            moved_a = ellipse_alpha(cx, cy, rx - GAZE_INSET - GAZE_EDGE, ry - GAZE_INSET - GAZE_EDGE, dx, 1.3)
+            inner = moved * moved_a + np.broadcast_to(fill, rgb.shape) * (1 - moved_a)
+            alpha = (open_a[..., 0] * 255).astype(np.uint8)
+            out[(side, step)] = (np.clip(inner, 0, 255).astype(np.uint8), alpha)
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--debug-dir", type=Path)
@@ -339,6 +375,8 @@ def main() -> None:
     save_layer("mouth", up(color), soft_alpha(mouth & fg, 1.2), layers)
     for (side, state), (rgb, alpha) in eye_states.items():
         save_layer(f"eye_{side}_{state}", rgb, alpha, layers)
+    for (side, step), (rgb, alpha) in make_gaze_frames(up(head_color)).items():
+        save_layer(f"eye_{side}_gaze_{step:02d}", rgb, alpha, layers)
     save_layer("bandana", up(color), soft_alpha(bandana, 0.6), layers)
     save_layer("ear_left", up(color), soft_alpha(ear_l, 0.7), layers)
     save_layer("ear_right", up(color), soft_alpha(ear_r, 0.7), layers)
@@ -366,6 +404,8 @@ def main() -> None:
             name: {"cx": cx * s, "cy": cy * s, "rx": (rx + 2) * s, "ry": (ry + 2) * s}
             for name, (cx, cy, rx, ry) in (("left", EYE_L), ("right", EYE_R))
         },
+        "gaze": {"direction": "screen_right", "steps": GAZE_STEPS, "max_shift_px": GAZE_MAX_PX * s,
+                 "layer_pattern": "eye_{side}_gaze_{step:02d}"},
         "eyelid": {"mode": "official_tile_swap", "half_full_at": 0.4, "closed_from": 0.55, "closed_full_at": 0.9},
         # Limits keep every rotation inside the artwork that actually exists:
         # ears swing outward only as far as the mirrored cheek strip reaches,
@@ -377,6 +417,7 @@ def main() -> None:
         "synthesized_fills": {
             "head": f"{EAR_FILL_PX}px cheek strip mirrored under each ear (hidden at rest)",
             "body": f"{NECK_FILL_PX}px jaw-fur band above the head cut line (hidden at rest)",
+            "gaze": "eye interior slid under the fixed rim; uncovered side filled with that eye's own sclera colour (lid-shaded)",
             "eye_states": "official Half Blink / Blink (Closed) / Wide tiles scaled onto each eye, colour-matched to the surrounding fur (not mirrored, so catch-lights match the front view)",
         },
     }

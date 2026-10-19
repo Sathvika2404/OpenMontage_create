@@ -81,6 +81,12 @@
       "ry": 42.0
     }
   },
+  "gaze": {
+    "direction": "screen_right",
+    "steps": 10,
+    "max_shift_px": 9.0,
+    "layer_pattern": "eye_{side}_gaze_{step:02d}"
+  },
   "eyelid": {
     "mode": "official_tile_swap",
     "half_full_at": 0.4,
@@ -203,6 +209,186 @@
         232
       ]
     },
+    "eye_left_gaze_01": {
+      "file": "layers/eye_left_gaze_01.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_02": {
+      "file": "layers/eye_left_gaze_02.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_03": {
+      "file": "layers/eye_left_gaze_03.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_04": {
+      "file": "layers/eye_left_gaze_04.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_05": {
+      "file": "layers/eye_left_gaze_05.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_06": {
+      "file": "layers/eye_left_gaze_06.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_07": {
+      "file": "layers/eye_left_gaze_07.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_08": {
+      "file": "layers/eye_left_gaze_08.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_09": {
+      "file": "layers/eye_left_gaze_09.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_left_gaze_10": {
+      "file": "layers/eye_left_gaze_10.png",
+      "bbox": [
+        172,
+        174,
+        242,
+        240
+      ]
+    },
+    "eye_right_gaze_01": {
+      "file": "layers/eye_right_gaze_01.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_02": {
+      "file": "layers/eye_right_gaze_02.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_03": {
+      "file": "layers/eye_right_gaze_03.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_04": {
+      "file": "layers/eye_right_gaze_04.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_05": {
+      "file": "layers/eye_right_gaze_05.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_06": {
+      "file": "layers/eye_right_gaze_06.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_07": {
+      "file": "layers/eye_right_gaze_07.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_08": {
+      "file": "layers/eye_right_gaze_08.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_09": {
+      "file": "layers/eye_right_gaze_09.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
+    "eye_right_gaze_10": {
+      "file": "layers/eye_right_gaze_10.png",
+      "bbox": [
+        324,
+        154,
+        388,
+        222
+      ]
+    },
     "bandana": {
       "file": "layers/bandana.png",
       "bbox": [
@@ -243,6 +429,7 @@
   "synthesized_fills": {
     "head": "16px cheek strip mirrored under each ear (hidden at rest)",
     "body": "24px jaw-fur band above the head cut line (hidden at rest)",
+    "gaze": "eye interior slid under the fixed rim; uncovered side filled with that eye's own sclera colour (lid-shaded)",
     "eye_states": "official Half Blink / Blink (Closed) / Wide tiles scaled onto each eye, colour-matched to the surrounding fur (not mirrored, so catch-lights match the front view)"
   }
 }

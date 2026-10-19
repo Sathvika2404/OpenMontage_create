@@ -4,8 +4,8 @@ Pipeline: `character-animation` · Remotion · 1920x1080 · 30 fps · free tools
 
 | Shot | Time | Action | Stage | Status |
 |---|---|---|---|---|
-| 1 | 0–5 s | Establish workshop, sunbeam + dust; Milo sits beside the slipper | 1 | **rendered** (10 s sample), awaiting review |
-| 2 | 5–10 s | Milo notices the slipper: ear twitch, wide eyes, tilt toward it, blink | 1 | **rendered** (10 s sample), awaiting review |
+| 1 | 0–5 s | Establish workshop; glint on the slipper; Milo notices, eyes dart right, pauses, turns toward it | 1 | **revision 2 rendered**, awaiting review |
+| 2 | 5–10 s | Gaze held on the slipper, clear tilt, ear follow-through, curious blink, lean toward it | 1 | **revision 2 rendered**, awaiting review |
 | 3 | 10–15 s | Stands up, walks to the slipper | 2 | **blocked: needs Stage 2 art** |
 | 4 | 15–20 s | Bites the heel, tries to lift the huge slipper | 2 | **blocked: needs Stage 2 art** |
 | 5 | 20–25 s | Struggles, slipper slips and drops, Milo surprised | 2 | **blocked: needs Stage 2 art** |

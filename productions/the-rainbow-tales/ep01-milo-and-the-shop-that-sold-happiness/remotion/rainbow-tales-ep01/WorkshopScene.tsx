@@ -108,7 +108,11 @@ export const WorkshopScene: React.FC<WorkshopSceneProps> = ({ rig, timeline }) =
     eyeRight: v("eye_right.closure"),
     mouthOpen: v("mouth.open"),
     wide: v("eyes.wide"),
+    gaze: v("eyes.gaze"),
+    lean: v("body.lean"),
+    stretch: v("body.stretch"),
   };
+  const glint = v("slipper.glint"); // 0..1 sweep position of a sun glint (0 = off)
 
   // Milo: rig canvas scaled so its paw pivot sits on the floor point.
   const k = L.milo.height / rig.canvas.height;
@@ -220,6 +224,27 @@ export const WorkshopScene: React.FC<WorkshopSceneProps> = ({ rig, timeline }) =
           src={staticFile(sl.src)}
           style={{ position: "absolute", left: sl.heel_x, top: slTop, width: sl.length, height: slH, filter: sl.filter }}
         />
+
+        {/* Attention cue: a soft sun glint sweeps across the slipper's
+            fleece collar (masked to the slipper's own alpha). */}
+        {glint > 0.001 && glint < 0.999 && (
+          <div
+            style={{
+              position: "absolute",
+              left: sl.heel_x,
+              top: slTop,
+              width: sl.length,
+              height: slH,
+              WebkitMaskImage: `url(${staticFile(sl.src)})`,
+              WebkitMaskSize: "100% 100%",
+              maskImage: `url(${staticFile(sl.src)})`,
+              maskSize: "100% 100%",
+              background: `linear-gradient(105deg, rgba(255,214,150,0) ${glint * 130 - 15}%, rgba(255,222,160,0.6) ${glint * 130 - 8}%, rgba(255,214,150,0) ${glint * 130}%)`,
+              mixBlendMode: "screen",
+              opacity: 0.75 * Math.sin(glint * Math.PI),
+            }}
+          />
+        )}
 
         {/* Milo: approved sitting puppet, graded into the warm window light. */}
         <div

@@ -14,6 +14,7 @@ export type MiloRig = {
   pivots: Record<string, Vec>;
   eyes: { left: EyeGeom; right: EyeGeom };
   limits_px?: { head_offset: number };
+  gaze?: { direction: string; steps: number; max_shift_px: number; layer_pattern: string };
   eyelid: { mode: string; half_full_at: number; closed_from: number; closed_full_at: number };
   limits_deg: Record<string, [number, number]>;
   layers: Record<string, { file: string }>;
@@ -35,6 +36,8 @@ export type MiloPose = {
   wide?: number; // 0..1 official "Wide" eye state
   hop?: number; // whole-body lift in canvas px (+ = up)
   stretch?: number; // body squash(-)/stretch(+), volume-preserving
+  gaze?: number; // 0..1 eyes look toward screen-right (pre-rendered interior shift)
+  lean?: number; // degrees, + = upper body leans toward screen-right, paws planted
 };
 
 const clamp = (v: number, [lo, hi]: [number, number] = [-360, 360]) =>
@@ -79,6 +82,27 @@ const EyeStates: React.FC<{
   );
 };
 
+// Eye direction: pre-rendered frames where the eye interior slides under the
+// fixed rim (see extract_milo_layers.make_gaze_frames). Nearest step is used;
+// steps are under 1 px apart on screen.
+const Gaze: React.FC<{ amount: number; rig: MiloRig }> = ({ amount, rig }) => {
+  const g = rig.gaze;
+  if (!g || amount <= 0.001) return null;
+  const step = Math.max(1, Math.min(g.steps, Math.round(amount * g.steps)));
+  const pad = String(step).padStart(2, "0");
+  return (
+    <>
+      {(["left", "right"] as const).map((side) => (
+        <Img
+          key={side}
+          src={staticFile(rig.layers[`eye_${side}_gaze_${pad}`].file)}
+          style={layerStyle(rig, [0, 0], "none")}
+        />
+      ))}
+    </>
+  );
+};
+
 export const MiloPuppet: React.FC<{ rig: MiloRig; pose: MiloPose }> = ({ rig, pose }) => {
   const P = rig.pivots;
   const L = rig.limits_deg;
@@ -90,9 +114,13 @@ export const MiloPuppet: React.FC<{ rig: MiloRig; pose: MiloPose }> = ({ rig, po
   // Breathing/stretch scales the body from the paws; everything riding on
   // the chest (head, bandana) is lifted by the same amount at its pivot height.
   const lift = (y: number) => -(P.body[1] - y) * sy;
+  // Lean: shear the body about the paw line (paws stay planted) and carry
+  // parts riding on it sideways by the shear at their pivot height.
+  const leanTan = Math.tan(((pose.lean ?? 0) * Math.PI) / 180);
+  const carry = (y: number) => (P.body[1] - y) * leanTan;
   const headLift = lift(P.head[1]);
   const headTransform =
-    `translate(${clamp(pose.headX, [-maxOff, maxOff])}px, ${clamp(pose.headY, [-maxOff, maxOff]) + headLift}px) ` +
+    `translate(${clamp(pose.headX, [-maxOff, maxOff]) + carry(P.head[1])}px, ${clamp(pose.headY, [-maxOff, maxOff]) + headLift}px) ` +
     `rotate(${clamp(pose.headRotate, L.head)}deg)`;
 
   const img = (name: string) => staticFile(rig.layers[name].file);
@@ -110,7 +138,10 @@ export const MiloPuppet: React.FC<{ rig: MiloRig; pose: MiloPose }> = ({ rig, po
       }}
     >
       <Img src={img("tail")} style={layerStyle(rig, P.tail, `rotate(${clamp(pose.tail, L.tail)}deg)`)} />
-      <Img src={img("body")} style={layerStyle(rig, P.body, `scale(${1 + sx}, ${1 + sy})`)} />
+      <Img
+        src={img("body")}
+        style={layerStyle(rig, P.body, `skewX(${-(pose.lean ?? 0)}deg) scale(${1 + sx}, ${1 + sy})`)}
+      />
       {headGroup(
         <>
           <Img src={img("head")} style={layerStyle(rig, P.head, "none")} />
@@ -122,6 +153,7 @@ export const MiloPuppet: React.FC<{ rig: MiloRig; pose: MiloPose }> = ({ rig, po
               `translateY(${pose.mouthOpen * 3}px) scaleY(${1 + pose.mouthOpen * 0.05})`,
             )}
           />
+          <Gaze amount={pose.gaze ?? 0} rig={rig} />
           <EyeStates side="left" closure={pose.eyeLeft} wide={pose.wide ?? 0} rig={rig} />
           <EyeStates side="right" closure={pose.eyeRight} wide={pose.wide ?? 0} rig={rig} />
         </>,
@@ -131,7 +163,7 @@ export const MiloPuppet: React.FC<{ rig: MiloRig; pose: MiloPose }> = ({ rig, po
         style={layerStyle(
           rig,
           P.bandana,
-          `translateY(${lift(P.bandana[1])}px) scaleX(${1 + sx}) rotate(${clamp(pose.bandana, L.bandana)}deg)`,
+          `translate(${carry(P.bandana[1])}px, ${lift(P.bandana[1])}px) scaleX(${1 + sx}) rotate(${clamp(pose.bandana, L.bandana)}deg)`,
         )}
       />
       {headGroup(
