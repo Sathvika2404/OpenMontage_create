@@ -20,6 +20,11 @@ Pipeline workspace (gitignored, regenerable): `projects/rainbow-tales-ep01/`.
 | `scripts/extract_milo_layers.py` | Rebuilds layers + rig from the sheet (OpenCV, local) | yes |
 | `scripts/render_puppet_test.py` | Renders any timeline via `video_compose` atelier mode (Remotion) | yes |
 | `remotion/rainbow-tales-ep01/` | Remotion source: `MiloPuppet`, timeline evaluator, test scene | yes |
+| `sets/grandpa-theo-workshop/source/` | Workshop background(s), as supplied | yes |
+| `props/slipper/source/` | Slipper image(s), as supplied | yes |
+| `characters/milo/source/stage2/` | Stage 2 Milo artwork (standing / walking / interaction), as supplied | yes |
+| `scenes/sc01-workshop-slipper/` | Scene 01 shot plan, Stage 2 art spec, timelines | yes |
+| `assets_manifest.json` | Provenance, checksums and inspection notes for every source asset | yes |
 | `projects/rainbow-tales-ep01/renders/` | Rendered MP4s + QC stills | **no** |
 
 ## Reproduce
