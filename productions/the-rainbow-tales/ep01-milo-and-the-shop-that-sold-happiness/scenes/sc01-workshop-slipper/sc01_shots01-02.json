@@ -1,0 +1,630 @@
+{
+  "version": "1.0",
+  "id": "sc01_shots01-02",
+  "character_id": "milo",
+  "rig": "characters/milo/rig/milo_front_rig.json",
+  "composition_id": "Sc01WorkshopSlipper",
+  "fps": 30,
+  "duration_seconds": 10,
+  "strip_audio": true,
+  "notes": "Scene 01 shots 1-2 (10 s). World units are workshop-plate pixels (1672x941). Camera channels give the world point at frame centre and the zoom; the cut at 5.0 s is an instant camera change (keys at 4.98 and 5.0). Acting keys use the approved sitting rig only. Positive head rotation tilts toward Milo's left = screen right = the slipper.",
+  "assets": {
+    "background": {
+      "src": "sets/grandpa-theo-workshop/source/workshop_interior_v1.webp",
+      "out": "scene/workshop_interior_v1.webp"
+    },
+    "slipper": {
+      "src": "props/slipper/source/slipper_brown_v1.webp",
+      "out": "scene/slipper.png",
+      "prep": "clamp_alpha_trim"
+    }
+  },
+  "layout": {
+    "world": {
+      "width": 1672,
+      "height": 941,
+      "background": "scene/workshop_interior_v1.webp"
+    },
+    "milo": {
+      "x": 720,
+      "floor_y": 805,
+      "height": 210,
+      "filter": "sepia(0.16) saturate(1.12) brightness(0.95) contrast(1.03)"
+    },
+    "slipper": {
+      "src": "scene/slipper.png",
+      "heel_x": 806,
+      "floor_y": 799,
+      "length": 300,
+      "aspect": 0.4374,
+      "filter": "brightness(0.86) saturate(0.9) sepia(0.12) contrast(1.02)"
+    },
+    "light": {
+      "shafts": [
+        {
+          "points": [
+            [
+              180,
+              0
+            ],
+            [
+              330,
+              0
+            ],
+            [
+              900,
+              640
+            ],
+            [
+              640,
+              705
+            ]
+          ],
+          "opacity": 0.12
+        },
+        {
+          "points": [
+            [
+              60,
+              120
+            ],
+            [
+              170,
+              90
+            ],
+            [
+              560,
+              700
+            ],
+            [
+              380,
+              720
+            ]
+          ],
+          "opacity": 0.09
+        }
+      ],
+      "dust": {
+        "count": 70,
+        "region": [
+          150,
+          80,
+          1000,
+          760
+        ],
+        "seed": "workshop-dust"
+      }
+    },
+    "shadow": {
+      "color": "rgba(30,14,4,0.72)",
+      "cast_skew_deg": -72,
+      "cast_scale_y": 0.3,
+      "cast_opacity": 0.45
+    }
+  },
+  "beats": [
+    {
+      "start": 0,
+      "end": 5,
+      "shot": 1,
+      "action": "establish",
+      "description": "Wide establishing view, gentle push-in toward Milo and the slipper. Milo idles: breathing, blinks (1.5 s, 3.9 s), soft ear sway, tail sway, tiny head drift."
+    },
+    {
+      "start": 5,
+      "end": 10,
+      "shot": 2,
+      "action": "notice_slipper",
+      "description": "Cut to a medium two-shot. Ear twitch toward the slipper (5.55 s), wide-eyed pop (5.9-6.85 s), anticipation dip then a ~10 deg tilt and lean toward the slipper (6.15-6.95 s) with ear follow-through; curious hold to 10 s with a re-tilt, slow blink (8.1 s) and a small curious tail wag. Eye direction is not animated: the iris glance was rejected in the acting test (painted irises cannot be cut cleanly)."
+    }
+  ],
+  "channels": {
+    "camera.scale": [
+      [
+        0,
+        1.19,
+        "linear"
+      ],
+      [
+        4.98,
+        1.3,
+        "inOut"
+      ],
+      [
+        5.0,
+        2.7,
+        "linear"
+      ],
+      [
+        10,
+        2.8,
+        "inOut"
+      ]
+    ],
+    "camera.x": [
+      [
+        0,
+        836,
+        "linear"
+      ],
+      [
+        4.98,
+        790,
+        "inOut"
+      ],
+      [
+        5.0,
+        790,
+        "linear"
+      ],
+      [
+        10,
+        780,
+        "inOut"
+      ]
+    ],
+    "camera.y": [
+      [
+        0,
+        470,
+        "linear"
+      ],
+      [
+        4.98,
+        520,
+        "inOut"
+      ],
+      [
+        5.0,
+        690,
+        "linear"
+      ],
+      [
+        10,
+        682,
+        "inOut"
+      ]
+    ],
+    "bg.blur": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        4.98,
+        0,
+        "linear"
+      ],
+      [
+        5.0,
+        1.2,
+        "linear"
+      ],
+      [
+        10,
+        1.2,
+        "linear"
+      ]
+    ],
+    "eyes.wide": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        5.8,
+        0,
+        "linear"
+      ],
+      [
+        5.9,
+        1,
+        "out"
+      ],
+      [
+        6.5,
+        1,
+        "linear"
+      ],
+      [
+        6.85,
+        0,
+        "inOut"
+      ],
+      [
+        10,
+        0,
+        "linear"
+      ]
+    ],
+    "eye_left.closure": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        1.5,
+        0,
+        "linear"
+      ],
+      [
+        1.59,
+        1,
+        "in"
+      ],
+      [
+        1.66,
+        1,
+        "linear"
+      ],
+      [
+        1.8,
+        0,
+        "out"
+      ],
+      [
+        3.9,
+        0,
+        "linear"
+      ],
+      [
+        3.99,
+        1,
+        "in"
+      ],
+      [
+        4.06,
+        1,
+        "linear"
+      ],
+      [
+        4.2,
+        0,
+        "out"
+      ],
+      [
+        8.1,
+        0,
+        "linear"
+      ],
+      [
+        8.22,
+        1,
+        "in"
+      ],
+      [
+        8.34,
+        1,
+        "linear"
+      ],
+      [
+        8.52,
+        0,
+        "out"
+      ],
+      [
+        10,
+        0,
+        "linear"
+      ]
+    ],
+    "eye_right.closure": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        1.5,
+        0,
+        "linear"
+      ],
+      [
+        1.59,
+        1,
+        "in"
+      ],
+      [
+        1.66,
+        1,
+        "linear"
+      ],
+      [
+        1.8,
+        0,
+        "out"
+      ],
+      [
+        3.9,
+        0,
+        "linear"
+      ],
+      [
+        3.99,
+        1,
+        "in"
+      ],
+      [
+        4.06,
+        1,
+        "linear"
+      ],
+      [
+        4.2,
+        0,
+        "out"
+      ],
+      [
+        8.1,
+        0,
+        "linear"
+      ],
+      [
+        8.22,
+        1,
+        "in"
+      ],
+      [
+        8.34,
+        1,
+        "linear"
+      ],
+      [
+        8.52,
+        0,
+        "out"
+      ],
+      [
+        10,
+        0,
+        "linear"
+      ]
+    ],
+    "head.rotate": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        2.0,
+        -1.2,
+        "inOut"
+      ],
+      [
+        4.0,
+        0.8,
+        "inOut"
+      ],
+      [
+        5.9,
+        0,
+        "inOut"
+      ],
+      [
+        6.15,
+        -1.5,
+        "inOut"
+      ],
+      [
+        6.95,
+        9.5,
+        "inOut"
+      ],
+      [
+        7.6,
+        8,
+        "inOut"
+      ],
+      [
+        8.4,
+        10.5,
+        "inOut"
+      ],
+      [
+        9.4,
+        9.8,
+        "inOut"
+      ],
+      [
+        10,
+        10,
+        "linear"
+      ]
+    ],
+    "head.x": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        6.15,
+        0,
+        "linear"
+      ],
+      [
+        6.95,
+        14,
+        "inOut"
+      ],
+      [
+        10,
+        14,
+        "linear"
+      ]
+    ],
+    "head.y": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        6.15,
+        1.5,
+        "inOut"
+      ],
+      [
+        6.95,
+        -5,
+        "inOut"
+      ],
+      [
+        10,
+        -5,
+        "linear"
+      ]
+    ],
+    "ear_right.rotate": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        5.5,
+        0,
+        "linear"
+      ],
+      [
+        5.6,
+        -3.5,
+        "out"
+      ],
+      [
+        5.75,
+        1,
+        "inOut"
+      ],
+      [
+        5.95,
+        0,
+        "inOut"
+      ],
+      [
+        10,
+        0,
+        "linear"
+      ]
+    ],
+    "mouth.open": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        10,
+        0,
+        "linear"
+      ]
+    ],
+    "tail.rotate": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        10,
+        0,
+        "linear"
+      ]
+    ],
+    "bandana.rotate": [
+      [
+        0,
+        0,
+        "linear"
+      ],
+      [
+        10,
+        0,
+        "linear"
+      ]
+    ]
+  },
+  "oscillators": [
+    {
+      "channel": "body.breath",
+      "start": 0,
+      "end": 10,
+      "amplitude": 0.011,
+      "period_seconds": 3.2,
+      "fade_seconds": 0,
+      "shape": "sine_positive"
+    },
+    {
+      "channel": "ear_left.rotate",
+      "start": 0,
+      "end": 5.4,
+      "amplitude": 1.5,
+      "period_seconds": 3.3,
+      "fade_seconds": 0.5,
+      "shape": "sine"
+    },
+    {
+      "channel": "ear_right.rotate",
+      "start": 0,
+      "end": 5.4,
+      "amplitude": 1.5,
+      "period_seconds": 3.7,
+      "fade_seconds": 0.5,
+      "shape": "sine"
+    },
+    {
+      "channel": "tail.rotate",
+      "start": 0,
+      "end": 7.0,
+      "amplitude": 4,
+      "period_seconds": 2.4,
+      "fade_seconds": 0.4,
+      "shape": "sine"
+    },
+    {
+      "channel": "tail.rotate",
+      "start": 7.0,
+      "end": 10.2,
+      "amplitude": 7,
+      "period_seconds": 0.6,
+      "fade_seconds": 0.5,
+      "shape": "sine"
+    },
+    {
+      "channel": "mouth.open",
+      "start": 0,
+      "end": 10,
+      "amplitude": 0.25,
+      "period_seconds": 1.6,
+      "fade_seconds": 0,
+      "shape": "sine_positive"
+    }
+  ],
+  "follow": [
+    {
+      "channel": "ear_left.rotate",
+      "source": "head.rotate",
+      "gain": -0.5,
+      "stiffness": 90,
+      "damping": 8
+    },
+    {
+      "channel": "ear_right.rotate",
+      "source": "head.rotate",
+      "gain": -0.5,
+      "stiffness": 80,
+      "damping": 7
+    },
+    {
+      "channel": "bandana.rotate",
+      "source": "head.rotate",
+      "gain": 0.12,
+      "stiffness": 60,
+      "damping": 10
+    }
+  ]
+}

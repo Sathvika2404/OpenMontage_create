@@ -2,8 +2,9 @@
 
 **Milo and the Shop That Sold Happiness** · target 9:30 · 1920x1080 · 16:9 · 30 fps · $0 budget
 
-Status: **tests only**: puppet test and character acting test (15 s each).
-The full episode has not been started.
+Status: puppet test and character acting test (15 s each) approved; scene 01
+shots 1–2 rendered as a 10 s sample. Shots 3–5 and the rest of the episode are
+not started.
 
 Pipeline: `character-animation` (beta), proposal → *sample* sub-stage.
 Pipeline workspace (gitignored, regenerable): `projects/rainbow-tales-ep01/`.
@@ -19,7 +20,7 @@ Pipeline workspace (gitignored, regenerable): `projects/rainbow-tales-ep01/`.
 | `timelines/milo_acting_test_15s.json` | Character acting test: notice → excited → surprised → joy | yes |
 | `scripts/extract_milo_layers.py` | Rebuilds layers + rig from the sheet (OpenCV, local) | yes |
 | `scripts/render_puppet_test.py` | Renders any timeline via `video_compose` atelier mode (Remotion) | yes |
-| `remotion/rainbow-tales-ep01/` | Remotion source: `MiloPuppet`, timeline evaluator, test scene | yes |
+| `remotion/rainbow-tales-ep01/` | Remotion source: `MiloPuppet`, timeline evaluator, test scenes, `WorkshopScene` (scene 01) | yes |
 | `sets/grandpa-theo-workshop/source/` | Workshop background(s), as supplied | yes |
 | `props/slipper/source/` | Slipper image(s), as supplied | yes |
 | `characters/milo/source/stage2/` | Stage 2 Milo artwork (standing / walking / interaction), as supplied | yes |

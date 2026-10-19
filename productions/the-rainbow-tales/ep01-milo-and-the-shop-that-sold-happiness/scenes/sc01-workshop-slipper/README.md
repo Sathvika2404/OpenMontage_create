@@ -4,13 +4,21 @@ Pipeline: `character-animation` · Remotion · 1920x1080 · 30 fps · free tools
 
 | Shot | Time | Action | Stage | Status |
 |---|---|---|---|---|
-| 1 | 0–5 s | Establish workshop, sunbeam + dust; Milo sits beside the slipper | 1 | assets supplied, awaiting build approval |
-| 2 | 5–10 s | Milo notices the slipper: ear twitch, wide eyes, tilt toward it, blink | 1 | assets supplied, awaiting build approval |
+| 1 | 0–5 s | Establish workshop, sunbeam + dust; Milo sits beside the slipper | 1 | **rendered** (10 s sample), awaiting review |
+| 2 | 5–10 s | Milo notices the slipper: ear twitch, wide eyes, tilt toward it, blink | 1 | **rendered** (10 s sample), awaiting review |
 | 3 | 10–15 s | Stands up, walks to the slipper | 2 | **blocked: needs Stage 2 art** |
 | 4 | 15–20 s | Bites the heel, tries to lift the huge slipper | 2 | **blocked: needs Stage 2 art** |
 | 5 | 20–25 s | Struggles, slipper slips and drops, Milo surprised | 2 | **blocked: needs Stage 2 art** |
 
 The full 25 s scene is not built until every Stage 2 pose is approved.
+
+## Stage 1 sample (shots 1–2)
+
+- Timeline + layout: `sc01_shots01-02.json` (world units = workshop plate px).
+- Composition: `Sc01WorkshopSlipper` in `remotion/rainbow-tales-ep01/WorkshopScene.tsx`.
+- Render: `python3 scripts/render_puppet_test.py --timeline scenes/sc01-workshop-slipper/sc01_shots01-02.json`
+  → `projects/rainbow-tales-ep01/renders/sc01_shots01-02.mp4` (exactly 10.000 s, no audio track).
+- QC: see `QUALITY_REPORT.md` → *Scene 01 — shots 1–2*.
 
 ## Where assets live
 

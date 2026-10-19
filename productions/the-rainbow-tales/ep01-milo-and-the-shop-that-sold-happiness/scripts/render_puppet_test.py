@@ -11,12 +11,20 @@ Usage (from the repo root):
 
 The output defaults to projects/rainbow-tales-ep01/renders/<timeline id>.mp4 and
 the composition to the timeline's "composition_id" (default MiloPuppetTest).
+
+Static files are served from a public dir assembled per render under the
+workspace (gitignored): Milo's layers at layers/, plus any timeline "assets"
+(source files are never modified; "clamp_alpha_trim" writes a cleaned copy).
+A timeline with "strip_audio": true gets its silent track removed so the MP4
+duration is exactly the timeline duration.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -26,6 +34,37 @@ PROJECT_ID = "rainbow-tales-ep01"
 WORKSPACE = REPO_ROOT / "projects" / PROJECT_ID
 
 sys.path.insert(0, str(REPO_ROOT))
+
+
+def clamp_alpha_trim(src: Path, dst: Path) -> float:
+    """Make a lossy-alpha cut-out solid inside, trim to content; return h/w."""
+    import numpy as np
+    from PIL import Image
+
+    im = np.asarray(Image.open(src).convert("RGBA")).copy()
+    a = im[:, :, 3]
+    a[a >= 240] = 255  # lossy WebP leaves the interior at ~253
+    ys, xs = np.nonzero(a > 8)
+    im = im[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+    Image.fromarray(im).save(dst)
+    return im.shape[0] / im.shape[1]
+
+
+def assemble_public_dir(timeline: dict) -> Path:
+    public = WORKSPACE / "public"
+    if public.exists():
+        shutil.rmtree(public)
+    shutil.copytree(EP_DIR / "characters" / "milo" / "layers", public / "layers")
+    for name, asset in (timeline.get("assets") or {}).items():
+        src, dst = EP_DIR / asset["src"], public / asset["out"]
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if asset.get("prep") == "clamp_alpha_trim":
+            aspect = clamp_alpha_trim(src, dst)
+            if name in timeline.get("layout", {}):
+                timeline["layout"][name]["aspect"] = round(aspect, 5)
+        else:
+            shutil.copyfile(src, dst)
+    return public
 
 
 def main() -> int:
@@ -46,13 +85,14 @@ def main() -> int:
     rig = json.loads((EP_DIR / timeline["rig"]).read_text(encoding="utf-8"))
     props_path = WORKSPACE / "artifacts" / f"{timeline['id']}_props.json"
     props_path.parent.mkdir(parents=True, exist_ok=True)
+    public_dir = assemble_public_dir(timeline)
     props_path.write_text(json.dumps({"rig": rig, "timeline": timeline}), encoding="utf-8")
 
     bespoke = {
         "entry": str(EP_DIR / "remotion" / "rainbow-tales-ep01" / "index.tsx"),
         "composition_id": timeline.get("composition_id", "MiloPuppetTest"),
         "props_path": str(props_path),
-        "public_dir": str(EP_DIR / "characters" / "milo"),
+        "public_dir": str(public_dir),
         "crf": 16,
     }
     if args.scale:
@@ -69,6 +109,11 @@ def main() -> int:
             "cuts": [],
         },
     })
+    if result.success and timeline.get("strip_audio"):
+        tmp = Path(output).with_suffix(".tmp.mp4")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", output, "-map", "0:v:0", "-c", "copy",
+                        "-movflags", "+faststart", str(tmp)], check=True)
+        tmp.replace(output)
     print(json.dumps({"success": result.success, "error": result.error,
                       "output": output, "data": result.data}, indent=2, default=str)[:3000])
     return 0 if result.success else 1

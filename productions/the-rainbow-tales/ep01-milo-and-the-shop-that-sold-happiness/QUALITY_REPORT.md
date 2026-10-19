@@ -1,6 +1,7 @@
 # Quality reports
 
-- [Character acting test (15 s)](#character-acting-test-15-s) (latest)
+- [Scene 01: shots 1–2 (10 s)](#scene-01--shots-12-10-s) (latest)
+- [Character acting test (15 s)](#character-acting-test-15-s)
 - [Puppet test (15 s)](#puppet-test-15-s)
 
 ## Puppet test (15 s)
@@ -93,3 +94,47 @@ Timeline: `timelines/milo_acting_test_15s.json`. Composition: `MiloActingTest`.
 5. **The tail is still a small tuft.** The wag is bigger but limited by the visible artwork.
 6. **The hop lifts the whole sitting body.** This reads as a joyful bounce, but a real puppy would push off with its front legs, and that needs separate leg artwork.
 7. Defects 1–3 from the puppet test still apply: soft edges, a light ear fringe, and the grey sliver at the right ear root.
+
+
+## Scene 01 — shots 1–2 (10 s)
+
+Render: `projects/rainbow-tales-ep01/renders/sc01_shots01-02.mp4` (gitignored).
+QC frames and contact sheet: `projects/rainbow-tales-ep01/renders/qc_sc01/`.
+
+### Technical checks
+
+| Check | Result |
+|---|---|
+| Decodes end-to-end | PASS |
+| Video | H.264 1920x1080, 16:9, 30 fps, **300 frames, 10.000 s**, no audio track |
+| Camera continuity | PASS. The only discontinuity is the planned cut at frame 150 (5.0 s). The largest change elsewhere is at the push-in's peak speed (2.5 s); it's spread evenly across the frame, not a pop. |
+| Slipper opacity | PASS. Interior fully opaque after import cleanup (98.7%); only the anti-aliased edge (1.3%) is partial |
+
+### Milo placement (computed from layout + camera)
+
+| Time | Milo paws (frame px) | Milo height | Slipper heel to toe (x) |
+|---|---|---|---|
+| 0 s (wide) | (822, 939) | 250 px | 924–1281 |
+| 4.98 s (end of push-in) | (869, 910) | 273 px | 981–1371 |
+| 5.0 s (medium) | (771, 850) | 567 px | 1003–1813 |
+| 10 s | (792, 884) | 588 px | 1033–1873 |
+
+Milo's floor point never moves in the world; only the camera moves, so there is no sliding. Scale changes only at the cut, never during a shot.
+
+### Visual checks (0, 2, 4, 6, 8, 9 s)
+
+| Check | Result |
+|---|---|
+| Both front paws visible, on the floor | PASS in all six frames |
+| Floor shadows | PASS. Contact shadow under the paws and the sole, plus soft cast shadows running away from the window |
+| Milo identity (fur, eyes, ears, chest patch, teal bandana and star) | PASS. Approved rig; only a mild warm grade to sit in the window light |
+| Slipper heel faces Milo, toe right | PASS |
+| Transparency artefacts on the slipper | None seen |
+
+### Known defects and limitations
+
+1. **The eyes don't shift toward the slipper.** The iris glance was rejected in the acting test, because the painted irises can't be cut cleanly. Attention reads through the ear twitch, wide-eyed pop, and tilt and lean toward the slipper. Real eye direction needs separate iris and eye-white art.
+2. **The background is soft.** The 1672×941 plate is enlarged 1.19–1.30× in the wide shot and 2.7–2.8× in the medium shot. The medium shot hides it with a deliberate background blur.
+3. **The slipper is slightly crisper and more photo-real** than the painted set, even after grading. Its toe curves up from the floor as drawn in the source art.
+4. **Milo's cast shadow is a static silhouette.** It doesn't follow the small head and ear moves; with blur and 45% opacity this is hard to spot.
+5. **A faint warm glow** shows under the viewer's-right eye during the wide-eyed pop (6 s), and earlier puppet-test edge softness still applies.
