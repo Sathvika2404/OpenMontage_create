@@ -20,7 +20,7 @@
     "body",
     "head",
     "mouth",
-    "eyes",
+    "eye_states",
     "bandana",
     "ear_left",
     "ear_right"
@@ -28,7 +28,7 @@
   "parenting": {
     "head": [
       "mouth",
-      "eyes",
+      "eye_states",
       "ear_left",
       "ear_right"
     ],
@@ -89,25 +89,28 @@
   },
   "limits_deg": {
     "head": [
-      -8,
-      8
+      -11,
+      11
     ],
     "ear_left": [
-      -7,
+      -6,
       7
     ],
     "ear_right": [
-      -7,
-      7
+      -6.5,
+      6
     ],
     "tail": [
-      -14,
-      14
+      -28,
+      28
     ],
     "bandana": [
-      -1.5,
-      1.5
+      -2,
+      2
     ]
+  },
+  "limits_px": {
+    "head_offset": 30
   },
   "layers": {
     "tail": {
@@ -152,7 +155,7 @@
         153,
         155,
         261,
-        248
+        253
       ]
     },
     "eye_left_closed": {
@@ -161,7 +164,16 @@
         153,
         155,
         261,
-        248
+        253
+      ]
+    },
+    "eye_left_wide": {
+      "file": "layers/eye_left_wide.png",
+      "bbox": [
+        157,
+        158,
+        257,
+        250
       ]
     },
     "eye_right_half": {
@@ -170,7 +182,7 @@
         305,
         135,
         407,
-        231
+        235
       ]
     },
     "eye_right_closed": {
@@ -179,7 +191,16 @@
         305,
         135,
         407,
-        231
+        235
+      ]
+    },
+    "eye_right_wide": {
+      "file": "layers/eye_right_wide.png",
+      "bbox": [
+        309,
+        138,
+        403,
+        232
       ]
     },
     "bandana": {
@@ -222,6 +243,6 @@
   "synthesized_fills": {
     "head": "16px cheek strip mirrored under each ear (hidden at rest)",
     "body": "24px jaw-fur band above the head cut line (hidden at rest)",
-    "eye_states": "official Half Blink / Blink (Closed) tiles scaled onto each eye, colour-matched to the surrounding fur; mirrored for Milo's left eye (viewer's right)"
+    "eye_states": "official Half Blink / Blink (Closed) / Wide tiles scaled onto each eye, colour-matched to the surrounding fur (not mirrored, so catch-lights match the front view)"
   }
 }

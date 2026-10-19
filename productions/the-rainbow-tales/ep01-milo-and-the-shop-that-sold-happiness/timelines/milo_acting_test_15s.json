@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "id": "milo_acting_test_15s",
+  "character_id": "milo",
+  "rig": "characters/milo/rig/milo_front_rig.json",
+  "composition_id": "MiloActingTest",
+  "fps": 30,
+  "duration_seconds": 15,
+  "staging": {"puppet_scale": 1.25, "floor_y": 1046},
+  "notes": "Hand-authored character acting test. Keys are [seconds, value, ease] (ease shapes the segment arriving at the key). Angles in degrees (+ = clockwise on screen). Offsets in rig-canvas px (x1.25 on screen). 'Milo's left' = viewer's right = +x / clockwise head tilt. Every amplitude stays inside rig limits_deg / limits_px so no missing artwork is exposed.",
+  "beats": [
+    {"start": 0.0, "end": 5.0, "action": "notice", "description": "Ear twitch at a sound (0.95s), eyes pop wide (official Wide eye state, 1.1-1.95s), anticipation dip, then head tilts ~10 deg and leans toward it (1.5-2.3s); curious re-tilt and blink while holding; settles back by 5.1s."},
+    {"start": 5.0, "end": 10.0, "action": "excited", "description": "Anticipation squash, launch into a bouncing loop with volume-preserving squash/stretch, big tail wag, panting jaw, happy head sway; ears flap on every bounce via spring follow."},
+    {"start": 10.0, "end": 12.3, "action": "surprised", "description": "Sudden stop: official Wide eyes, jaw drops (gasp), head pulls back, body stretches tall, ears flare. Freeze ~1.2s, double-take blink at 11.5s."},
+    {"start": 12.3, "end": 15.0, "action": "joy", "description": "Anticipation squash, joyful hop, eyes squeeze shut in a happy smile (official Blink art) then reopen, fast tail wag, bouncing and head sway to the end."}
+  ],
+  "channels": {
+    "eyes.wide": [[0, 0, "linear"], [1.1, 0, "linear"], [1.2, 1, "out"], [1.6, 1, "linear"], [1.95, 0, "inOut"], [10.08, 0, "linear"], [10.18, 1, "out"], [12.25, 1, "linear"], [12.4, 0, "inOut"], [15, 0, "linear"]],
+    "eye_left.closure": [[0, 0, "linear"], [3.1, 0, "linear"], [3.19, 1, "in"], [3.26, 1, "linear"], [3.4, 0, "out"], [7.9, 0, "linear"], [7.99, 1, "in"], [8.06, 1, "linear"], [8.2, 0, "out"], [11.5, 0, "linear"], [11.58, 1, "in"], [11.64, 1, "linear"], [11.76, 0, "out"], [12.35, 0, "linear"], [12.5, 1, "inOut"], [13.35, 1, "linear"], [13.55, 0, "out"], [15, 0, "linear"]],
+    "eye_right.closure": [[0, 0, "linear"], [3.1, 0, "linear"], [3.19, 1, "in"], [3.26, 1, "linear"], [3.4, 0, "out"], [7.9, 0, "linear"], [7.99, 1, "in"], [8.06, 1, "linear"], [8.2, 0, "out"], [11.5, 0, "linear"], [11.58, 1, "in"], [11.64, 1, "linear"], [11.76, 0, "out"], [12.35, 0, "linear"], [12.5, 1, "inOut"], [13.35, 1, "linear"], [13.55, 0, "out"], [15, 0, "linear"]],
+    "head.rotate": [[0, 0, "linear"], [1.3, 0, "linear"], [1.5, -1.5, "inOut"], [2.3, 10, "inOut"], [2.9, 9, "inOut"], [3.6, 11, "inOut"], [4.3, 10.5, "inOut"], [5.1, 0, "inOut"], [10.08, 0, "linear"], [10.24, -3, "out"], [11.9, -2, "inOut"], [12.3, 0, "inOut"], [15, 0, "linear"]],
+    "head.x": [[0, 0, "linear"], [1.5, 0, "linear"], [2.3, 16, "inOut"], [4.3, 16, "linear"], [5.1, 0, "inOut"], [15, 0, "linear"]],
+    "head.y": [[0, 0, "linear"], [1.5, 0, "linear"], [2.3, -8, "inOut"], [4.3, -8, "linear"], [5.1, 0, "inOut"], [10.08, 0, "linear"], [10.24, -16, "outBack"], [11.9, -14, "inOut"], [12.35, 4, "inOut"], [12.6, -10, "out"], [13.0, 0, "inOut"], [15, 0, "linear"]],
+    "ear_left.rotate": [[0, 0, "linear"], [0.9, 0, "linear"], [1.0, 4, "out"], [1.15, -1.5, "inOut"], [1.35, 0, "inOut"], [10.08, 0, "linear"], [10.22, 7, "out"], [11.9, 5.5, "inOut"], [12.4, 0, "inOut"], [15, 0, "linear"]],
+    "ear_right.rotate": [[0, 0, "linear"], [0.95, 0, "linear"], [1.05, -3, "out"], [1.2, 1, "inOut"], [1.4, 0, "inOut"], [10.08, 0, "linear"], [10.22, -6.5, "out"], [11.9, -5, "inOut"], [12.4, 0, "inOut"], [15, 0, "linear"]],
+    "mouth.open": [[0, 0, "linear"], [5.2, 0, "linear"], [5.5, 1, "out"], [9.6, 1, "linear"], [10.0, 0.6, "inOut"], [10.08, 0.4, "linear"], [10.22, 2.4, "out"], [11.9, 2.2, "inOut"], [12.5, 1.2, "inOut"], [15, 1.2, "linear"]],
+    "body.stretch": [[0, 0, "linear"], [5.0, 0, "linear"], [5.3, -0.025, "inOut"], [5.5, 0.03, "out"], [5.7, -0.012, "in"], [9.6, -0.012, "linear"], [9.9, 0, "inOut"], [10.08, 0, "linear"], [10.24, 0.03, "outBack"], [11.9, 0.022, "inOut"], [12.35, -0.025, "inOut"], [12.55, 0.04, "out"], [12.8, -0.01, "in"], [13.0, 0, "inOut"], [15, 0, "linear"]],
+    "body.hop": [[0, 0, "linear"], [5.3, 0, "linear"], [5.5, 14, "out"], [5.7, 0, "in"], [12.35, 0, "linear"], [12.6, 24, "out"], [12.85, 0, "in"], [15, 0, "linear"]],
+    "tail.rotate": [[0, 0, "linear"], [15, 0, "linear"]],
+    "bandana.rotate": [[0, 0, "linear"], [15, 0, "linear"]]
+  },
+  "oscillators": [
+    {"channel": "body.breath", "start": 0, "end": 15, "amplitude": 0.011, "period_seconds": 3.2, "fade_seconds": 0, "shape": "sine_positive"},
+    {"channel": "tail.rotate", "start": 0, "end": 5.4, "amplitude": 3, "period_seconds": 2.4, "fade_seconds": 0.4, "shape": "sine"},
+    {"channel": "tail.rotate", "start": 5.4, "end": 9.8, "amplitude": 24, "period_seconds": 0.34, "fade_seconds": 0.35, "shape": "sine"},
+    {"channel": "tail.rotate", "start": 12.5, "end": 15.2, "amplitude": 24, "period_seconds": 0.32, "fade_seconds": 0.3, "shape": "sine"},
+    {"channel": "body.hop", "start": 5.7, "end": 9.6, "amplitude": 11, "period_seconds": 0.68, "fade_seconds": 0.3, "shape": "abs_sine"},
+    {"channel": "body.stretch", "start": 5.7, "end": 9.6, "amplitude": 0.03, "period_seconds": 0.68, "fade_seconds": 0.3, "shape": "abs_sine"},
+    {"channel": "body.hop", "start": 12.85, "end": 15.2, "amplitude": 8, "period_seconds": 0.6, "fade_seconds": 0.3, "shape": "abs_sine"},
+    {"channel": "body.stretch", "start": 12.85, "end": 15.2, "amplitude": 0.02, "period_seconds": 0.6, "fade_seconds": 0.3, "shape": "abs_sine"},
+    {"channel": "head.rotate", "start": 5.7, "end": 9.6, "amplitude": 4, "period_seconds": 1.36, "fade_seconds": 0.4, "shape": "sine"},
+    {"channel": "head.rotate", "start": 12.8, "end": 15.2, "amplitude": 5, "period_seconds": 1.2, "fade_seconds": 0.4, "shape": "sine"},
+    {"channel": "mouth.open", "start": 5.6, "end": 9.6, "amplitude": 0.6, "period_seconds": 0.34, "fade_seconds": 0.3, "shape": "sine_positive"},
+    {"channel": "mouth.open", "start": 12.7, "end": 15.2, "amplitude": 0.5, "period_seconds": 0.3, "fade_seconds": 0.3, "shape": "sine_positive"},
+    {"channel": "bandana.rotate", "start": 5.7, "end": 9.6, "amplitude": 1, "period_seconds": 0.68, "fade_seconds": 0.3, "shape": "sine"}
+  ],
+  "follow": [
+    {"channel": "ear_left.rotate", "source": "head.rotate", "gain": -0.5, "stiffness": 90, "damping": 8, "note": "Gravity counter-rotation with overshoot when the head tilts."},
+    {"channel": "ear_right.rotate", "source": "head.rotate", "gain": -0.5, "stiffness": 80, "damping": 7},
+    {"channel": "ear_left.rotate", "source": "body.hop", "gain": 0.22, "stiffness": 150, "damping": 6, "note": "Ears flap outward and lag on every bounce."},
+    {"channel": "ear_right.rotate", "source": "body.hop", "gain": -0.22, "stiffness": 140, "damping": 6},
+    {"channel": "bandana.rotate", "source": "head.rotate", "gain": 0.12, "stiffness": 60, "damping": 10}
+  ]
+}

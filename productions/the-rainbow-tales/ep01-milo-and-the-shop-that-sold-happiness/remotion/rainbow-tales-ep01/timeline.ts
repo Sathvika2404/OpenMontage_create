@@ -15,7 +15,7 @@ export type Oscillator = {
   amplitude: number;
   period_seconds: number;
   fade_seconds: number;
-  shape: "sine" | "sine_positive";
+  shape: "sine" | "sine_positive" | "abs_sine";
 };
 
 export type Follow = {
@@ -65,7 +65,13 @@ const sampleOscillator = (o: Oscillator, t: number): number => {
     env = Math.min(1, (t - o.start) / o.fade_seconds, (o.end - t) / o.fade_seconds);
     env = EASES.inOut(Math.max(0, env));
   }
-  const wave = o.shape === "sine_positive" ? (1 - Math.cos(phase)) / 2 : Math.sin(phase);
+  // abs_sine: one bounce per period (0 at contact, 1 at the top of the hop).
+  const wave =
+    o.shape === "sine_positive"
+      ? (1 - Math.cos(phase)) / 2
+      : o.shape === "abs_sine"
+        ? Math.abs(Math.sin(phase / 2))
+        : Math.sin(phase);
   return o.amplitude * env * wave;
 };
 

@@ -73,14 +73,24 @@ TAIL = [(52, 331), (40, 327), (28, 331), (19, 341), (21, 351), (31, 358),
 # Central face features protected from backdrop removal: (cx, cy), (rx, ry).
 FEATURES_ELLIPSE = ((142, 128), (72, 72))
 # Official "Eye States" tiles (SHEET px): eye centre of each tile. The tiles
-# are close-ups at ~1.47x the front-view eye size; one eye is shown, mirrored
-# for Milo's other eye so outer corners match.
-EYE_TILE_CENTERS = {"open": (631, 946), "half": (724, 946), "closed": (818, 946)}
+# are close-ups at ~1.47x the front-view eye size. They are NOT mirrored for
+# the second eye: unmirrored, the catch-light sits upper-right like both eyes
+# in the front view.
+EYE_TILE_CENTERS = {"open": (631, 946), "half": (724, 946), "closed": (818, 946), "wide": (913, 946)}
 EYE_TILE_RIM = (28.5, 27.0)   # half-size of the open tile's dark rim (sheet px)
-EYE_TILE_Y_LIMIT = (900, 977)  # stay inside the rounded tile
+EYE_TILE_Y_LIMIT = (899, 979)  # stay inside the rounded tile
 # Eyes: (cx, cy, rx, ry) of the dark outer rim.
 EYE_L = (103.5, 103.5, 19.5, 18.5)
 EYE_R = (178.0, 94.0, 18.0, 19.0)
+
+# NOTE: separating the irises for eye direction ("glance") was evaluated and
+# rejected: in the painted art the iris blends softly into the rim shadow, so
+# a hard-edged iris cut leaves fragments and bright edges when shifted. Needs
+# separate iris + eye-white artwork.
+# NOTE: the sheet's "Mouth Shapes" tiles were evaluated and rejected for the
+# front view: they show a closed/near-closed jaw, while the front view's jaw
+# hangs open down to the bandana, so swapping them in requires chin artwork
+# that does not exist (it read as a pasted patch). Needs new front-view art.
 
 PIVOTS = {
     "body": (141, 387),     # paws on the floor; breathing scales from here
@@ -233,16 +243,21 @@ def fit_eye_tiles(sheet: np.ndarray, face: np.ndarray) -> dict:
         cv2.ellipse(ring, (int(cx * SCALE), int(cy * SCALE)), (int((rx + 8) * SCALE), int((ry + 8) * SCALE)), 0, 0, 360, 255, -1)
         cv2.ellipse(ring, (int(cx * SCALE), int(cy * SCALE)), (int((rx + 3) * SCALE), int((ry + 3) * SCALE)), 0, 0, 360, 0, -1)
         alpha = np.zeros((H, W), np.uint8)
-        cv2.ellipse(alpha, (int(cx * SCALE), int(cy * SCALE)), (int((rx + 3) * SCALE), int((ry + 3) * SCALE)), 0, 0, 360, 255, -1)
+        # Raised 1px and shortened: the tiles end ~23px below the eye centre,
+        # so a taller fade would show the tile's bottom edge as a line.
+        cv2.ellipse(alpha, (int(cx * SCALE), int((cy - 1) * SCALE)), (int((rx + 3) * SCALE), int((ry + 2) * SCALE)), 0, 0, 360, 255, -1)
         alpha = cv2.GaussianBlur(alpha, (0, 0), 2.2 * SCALE)
         alpha = np.clip(alpha.astype(np.float32) * 1.5, 0, 255).astype(np.uint8)
-        for state in ("half", "closed"):
+        wide_alpha = np.zeros((H, W), np.uint8)
+        # Raised slightly: the Wide tile paints a bright lower lid that would
+        # glow against the front view's darker cheek fur.
+        cv2.ellipse(wide_alpha, (int(cx * SCALE), int((cy - 1.5) * SCALE)), (int((rx + 2.5) * SCALE), int((ry + 1.5) * SCALE)), 0, 0, 360, 255, -1)
+        wide_alpha = np.clip(cv2.GaussianBlur(wide_alpha, (0, 0), 1.6 * SCALE).astype(np.float32) * 1.5, 0, 255).astype(np.uint8)
+        for state in ("half", "closed", "wide"):
             tcx, tcy = EYE_TILE_CENTERS[state]
             hw, hh = int((rx + 9) / sx), int((ry + 9) / sy)
             y0, y1 = max(tcy - hh, EYE_TILE_Y_LIMIT[0]), min(tcy + hh, EYE_TILE_Y_LIMIT[1])
             tile = sheet[y0:y1, tcx - hw:tcx + hw]
-            if side == "right":
-                tile = tile[:, ::-1]
             scale = SCALE * sx
             tw, th = int(round(tile.shape[1] * scale)), int(round(tile.shape[0] * SCALE * sy))
             # INTER_AREA: this is a downscale of higher-detail official art.
@@ -254,9 +269,12 @@ def fit_eye_tiles(sheet: np.ndarray, face: np.ndarray) -> dict:
             covered = np.zeros((H, W), np.uint8)
             covered[oy:oy + th, ox:ox + tw] = 255
             r = (ring > 0) & (covered > 0)
+            # Feather where the tile ends so its rectangle never shows.
+            covered = cv2.GaussianBlur(cv2.erode(covered, np.ones((5, 5), np.uint8)), (0, 0), 1.2 * SCALE)
             gain = face_big[r].reshape(-1, 3).mean(0) / np.maximum(canvas[r].reshape(-1, 3).mean(0), 1)
             canvas = np.clip(canvas.astype(np.float32) * gain, 0, 255).astype(np.uint8)
-            out[(side, state)] = (canvas, np.minimum(alpha, covered))
+            a = wide_alpha if state == "wide" else alpha
+            out[(side, state)] = (canvas, np.minimum(a, covered))
     return out
 
 
@@ -337,9 +355,10 @@ def main() -> None:
             "scale": SCALE,
         },
         "canvas": {"width": CROP_W * s, "height": CROP_H * s},
-        "draw_order": ["tail", "body", "head", "mouth", "eyes", "bandana", "ear_left", "ear_right"],
+        "draw_order": ["tail", "body", "head", "mouth", "eye_states",
+                       "bandana", "ear_left", "ear_right"],
         "parenting": {
-            "head": ["mouth", "eyes", "ear_left", "ear_right"],
+            "head": ["mouth", "eye_states", "ear_left", "ear_right"],
             "body": ["head", "bandana"],
         },
         "pivots": {k: [x * s, y * s] for k, (x, y) in PIVOTS.items()},
@@ -348,13 +367,17 @@ def main() -> None:
             for name, (cx, cy, rx, ry) in (("left", EYE_L), ("right", EYE_R))
         },
         "eyelid": {"mode": "official_tile_swap", "half_full_at": 0.4, "closed_from": 0.55, "closed_full_at": 0.9},
-        "limits_deg": {"head": [-8, 8], "ear_left": [-7, 7], "ear_right": [-7, 7],
-                       "tail": [-14, 14], "bandana": [-1.5, 1.5]},
+        # Limits keep every rotation inside the artwork that actually exists:
+        # ears swing outward only as far as the mirrored cheek strip reaches,
+        # and the head never tilts far enough to expose the neck cut.
+        "limits_deg": {"head": [-11, 11], "ear_left": [-6, 7], "ear_right": [-6.5, 6],
+                       "tail": [-28, 28], "bandana": [-2, 2]},
+        "limits_px": {"head_offset": 30},
         "layers": layers,
         "synthesized_fills": {
             "head": f"{EAR_FILL_PX}px cheek strip mirrored under each ear (hidden at rest)",
             "body": f"{NECK_FILL_PX}px jaw-fur band above the head cut line (hidden at rest)",
-            "eye_states": "official Half Blink / Blink (Closed) tiles scaled onto each eye, colour-matched to the surrounding fur; mirrored for Milo's left eye (viewer's right)",
+            "eye_states": "official Half Blink / Blink (Closed) / Wide tiles scaled onto each eye, colour-matched to the surrounding fur (not mirrored, so catch-lights match the front view)",
         },
     }
     RIG_PATH.parent.mkdir(parents=True, exist_ok=True)

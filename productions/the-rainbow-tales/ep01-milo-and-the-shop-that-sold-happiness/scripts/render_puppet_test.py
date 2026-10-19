@@ -1,4 +1,4 @@
-"""Render the 15-second Milo puppet test through OpenMontage's video_compose.
+"""Render a Milo puppet/acting test timeline through OpenMontage's video_compose.
 
 Merges the rig + explicit action timeline into a Remotion props file under the
 pipeline workspace (projects/rainbow-tales-ep01/, gitignored), then renders the
@@ -7,7 +7,10 @@ remotion-composer/remotion.config.ts).
 
 Usage (from the repo root):
     python3 productions/the-rainbow-tales/ep01-milo-and-the-shop-that-sold-happiness/scripts/render_puppet_test.py \
-        [--timeline timelines/milo_puppet_test_15s.json] [--output PATH] [--scale 0.5]
+        [--timeline timelines/milo_acting_test_15s.json] [--output PATH] [--scale 0.5]
+
+The output defaults to projects/rainbow-tales-ep01/renders/<timeline id>.mp4 and
+the composition to the timeline's "composition_id" (default MiloPuppetTest).
 """
 
 from __future__ import annotations
@@ -28,7 +31,7 @@ sys.path.insert(0, str(REPO_ROOT))
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--timeline", default="timelines/milo_puppet_test_15s.json")
-    ap.add_argument("--output", default=str(WORKSPACE / "renders" / "milo_puppet_test_15s.mp4"))
+    ap.add_argument("--output", help="default: projects/rainbow-tales-ep01/renders/<timeline id>.mp4")
     ap.add_argument("--scale", type=float, help="draft scale, e.g. 0.5")
     args = ap.parse_args()
 
@@ -39,6 +42,7 @@ def main() -> int:
                  pipeline_type="character-animation")
 
     timeline = json.loads((EP_DIR / args.timeline).read_text(encoding="utf-8"))
+    output = args.output or str(WORKSPACE / "renders" / f"{timeline['id']}.mp4")
     rig = json.loads((EP_DIR / timeline["rig"]).read_text(encoding="utf-8"))
     props_path = WORKSPACE / "artifacts" / f"{timeline['id']}_props.json"
     props_path.parent.mkdir(parents=True, exist_ok=True)
@@ -46,7 +50,7 @@ def main() -> int:
 
     bespoke = {
         "entry": str(EP_DIR / "remotion" / "rainbow-tales-ep01" / "index.tsx"),
-        "composition_id": "MiloPuppetTest",
+        "composition_id": timeline.get("composition_id", "MiloPuppetTest"),
         "props_path": str(props_path),
         "public_dir": str(EP_DIR / "characters" / "milo"),
         "crf": 16,
@@ -56,7 +60,7 @@ def main() -> int:
 
     result = VideoCompose().execute({
         "operation": "render",
-        "output_path": args.output,
+        "output_path": output,
         "edit_decisions": {
             "version": "1.0",
             "composition_mode": "atelier",
@@ -66,7 +70,7 @@ def main() -> int:
         },
     })
     print(json.dumps({"success": result.success, "error": result.error,
-                      "output": args.output, "data": result.data}, indent=2, default=str)[:3000])
+                      "output": output, "data": result.data}, indent=2, default=str)[:3000])
     return 0 if result.success else 1
 
 
