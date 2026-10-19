@@ -25,6 +25,7 @@ import time
 from pathlib import Path
 from typing import Any, Optional
 
+from lib.local_runtime import GSAP_CDN_URL, browser_env, stage_gsap
 from tools.base_tool import (
     BaseTool,
     Determinism,
@@ -346,6 +347,7 @@ class HyperFramesCompose(BaseTool):
                 capture_output=True,
                 text=True,
                 timeout=20,
+                env=browser_env(),
             )
         except subprocess.TimeoutExpired:
             cls._cli_probe_cache = {"error": "doctor timed out after 20s"}
@@ -602,6 +604,9 @@ class HyperFramesCompose(BaseTool):
             css_vars=css_vars,
             title=edit_decisions.get("metadata", {}).get("title")
             or f"OpenMontage {edit_decisions.get('renderer_family', 'composition')}",
+            # Vendor GSAP into the workspace when a local copy exists so
+            # renders do not depend on the jsDelivr CDN.
+            gsap_src=stage_gsap(workspace),
         )
         (workspace / "index.html").write_text(html, encoding="utf-8")
 
@@ -1173,6 +1178,7 @@ class HyperFramesCompose(BaseTool):
         total_duration: float,
         css_vars: dict[str, str],
         title: str,
+        gsap_src: str = GSAP_CDN_URL,
     ) -> str:
         """Emit a HyperFrames-contract-compliant index.html.
 
@@ -1244,7 +1250,7 @@ class HyperFramesCompose(BaseTool):
     .clip.text-card h1 {{ font-family: var(--font-heading); font-weight: 700; font-size: 96px; line-height: 1.1; margin: 0; color: var(--color-fg); }}
     .clip.text-card .subtitle {{ font-size: 36px; margin-top: 24px; color: var(--color-accent); }}
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="{self._escape_attr(gsap_src)}"></script>
 </head>
 <body>
   <div data-composition-id="root" data-start="0" data-duration="{self._f(total_duration)}" data-width="{width}" data-height="{height}">
@@ -1375,6 +1381,9 @@ class HyperFramesCompose(BaseTool):
                 timeout=timeout,
                 cwd=str(cwd) if cwd else None,
                 check=False,
+                # Point the CLI at a local Chromium when one is available
+                # instead of letting it download chrome-headless-shell.
+                env=browser_env(),
             )
         except subprocess.TimeoutExpired as e:
             # Surface timeouts as a failed CompletedProcess so callers get a

@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from lib.local_runtime import resolve_piper_model
 from tools.base_tool import (
     BaseTool,
     Determinism,
@@ -39,7 +40,8 @@ class PiperTTS(BaseTool):
         "  pip install piper-tts\n"
         "Or download from https://github.com/rhasspy/piper/releases\n"
         "Then download a voice model:\n"
-        "  piper --download-dir ~/.piper/models --model en_US-lessac-medium"
+        "  python3 -m piper.download_voices --download-dir ~/.piper/models en_US-lessac-medium\n"
+        "Set PIPER_MODEL_DIR to use a different model directory."
     )
     agent_skills = ["text-to-speech"]
 
@@ -120,10 +122,15 @@ class PiperTTS(BaseTool):
         output_path = Path(inputs.get("output_path", "tts_output.wav"))
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
+        # Piper only resolves bare voice names relative to the CWD, so pass an
+        # explicit absolute model path when one can be found locally.
+        model = inputs.get("model", "en_US-lessac-medium")
+        model_path = resolve_piper_model(model)
+
         proc = subprocess.run(
             [
                 "piper",
-                "--model", inputs.get("model", "en_US-lessac-medium"),
+                "--model", str(model_path) if model_path else model,
                 "--speaker", str(inputs.get("speaker_id", 0)),
                 "--length-scale", str(inputs.get("length_scale", 1.0)),
                 "--sentence-silence", str(inputs.get("sentence_silence", 0.3)),
@@ -144,12 +151,13 @@ class PiperTTS(BaseTool):
             success=True,
             data={
                 "provider": self.provider,
-                "model": inputs.get("model", "en_US-lessac-medium"),
+                "model": model,
+                "model_path": str(model_path) if model_path else None,
                 "speaker_id": inputs.get("speaker_id", 0),
                 "text_length": len(inputs["text"]),
                 "output": str(output_path),
                 "format": "wav",
             },
             artifacts=[str(output_path)],
-            model=inputs.get("model", "en_US-lessac-medium"),
+            model=model,
         )

@@ -104,3 +104,8 @@ venv/
 
 # Local Wan / diffusers GPU environment
 .venv-wan/
+
+# Local runtime setup (scripts/setup_cloud_env.sh) — vendored JS + resolved
+# local paths. Regenerable; never contains secrets, but machine-specific.
+.vendor/
+.env.local-runtime

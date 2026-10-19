@@ -6,7 +6,7 @@ PIP = $(RUN_PYTHON) -m pip
 
 .DEFAULT_GOAL := setup
 
-.PHONY: setup install install-dev install-gpu test test-contracts lint clean preflight demo demo-list hyperframes-doctor hyperframes-warm venv ensure-venv
+.PHONY: setup install install-dev install-gpu test test-contracts lint clean preflight demo demo-list hyperframes-doctor hyperframes-warm cloud-setup venv ensure-venv
 
 # ---- Virtual environment ----
 
@@ -127,3 +127,9 @@ lint: ensure-venv
 
 clean:
 	$(BASE_PYTHON) -c "import pathlib, shutil; excluded=[pathlib.Path('$(VENV_DIR)'), pathlib.Path('venv')]; skip=lambda p: any(p == root or root in p.parents for root in excluded); roots=[p for p in pathlib.Path('.').rglob('__pycache__') if not skip(p)]; [shutil.rmtree(p) for p in roots]; files=[p for p in pathlib.Path('.').rglob('*.pyc') if not skip(p)]; [p.unlink() for p in files]"
+
+# ---- Sandboxed cloud environments ----
+# Local Chromium + vendored GSAP + explicit Piper model path for sessions that
+# block browser downloads and CDNs. See scripts/setup_cloud_env.sh.
+cloud-setup:
+	bash scripts/setup_cloud_env.sh
